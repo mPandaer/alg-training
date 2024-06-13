@@ -42,31 +42,30 @@ public class Code04_MaxSlidingWindow {
 
 
     /**
-     * 方法二：单队列
-     * 思路：先加入k个队列，不过在加入过程中，会不断地判断加入的值是否比当前最大值还要大，并更新最大值
-     * 时间复杂度：
-     * 空间复杂度：
-     * @param nums
-     * @param k
-     * @return
+     * 方法二：单调队列
+     * 思路：我们需要确定滑动窗口的左右边界，在这个滑动窗口的数据中维护一个单调队列，而我们需要的结果值，
+     * 就是队头的值，即这个单调队列是单调递减
+     * 时间复杂度：O(n)
+     * 空间复杂度：O(k)
      */
     public int[] method02(int[] nums, int k) {
         int[] ans = new int[nums.length - k + 1];
         int index = 0;
-        Queue<Integer> queue = new ArrayDeque<>();
-        int tempMax = nums[0];
-        for(int i = 0; i<k;i++) {
-            int value = nums[i];
-            queue.add(value);
-            tempMax = Math.max(tempMax,value);
-        }
-        ans[index] = tempMax;
-        for (int i = k; i< nums.length;i++) {
-            queue.poll();
-            queue.add(nums[i]);
+        Deque<Integer> deque = new ArrayDeque<>();
 
+        for (int j = 0,i= 1-k;j < nums.length;i++,j++) {
+            if (i > 0 && !deque.isEmpty() && deque.peekFirst() == nums[i - 1]) {
+                deque.removeFirst();
+            }
+            //保证队列单调
+            while (!deque.isEmpty() && nums[j] > deque.peekLast()) {
+                deque.removeLast();
+            }
+            deque.add(nums[j]);
+            if (i >= 0) {
+                ans[index++] = deque.peek();
+            }
         }
-
         return ans;
     }
 }
