@@ -1,13 +1,12 @@
 package com.pandaer.week02;
 
-import javax.print.DocFlavor;
 import java.util.Deque;
 import java.util.LinkedList;
 
 /**
  * <a href='https://leetcode.cn/problems/min-stack/'>最小栈</a>
  */
-public class Code02_IsValid {
+public class Code02_MinStack {
 
 
     /**
