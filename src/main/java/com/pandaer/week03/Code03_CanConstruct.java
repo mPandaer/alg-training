@@ -16,7 +16,7 @@ public class Code03_CanConstruct {
     /**
      * 解法一：排序 判断是否是子串
      * 思路：将字符串按照字母顺序排序，然后判断排序后的字符串是不是另外一个的子串。
-     * 时间复杂度：O(n)
+     * 时间复杂度：O(nlogn)
      * 空间复杂度：O(n+m)
      * 这个解法 考虑不全面，可以不是子串 思路错误
      */
@@ -91,8 +91,8 @@ public class Code03_CanConstruct {
      * 思路：针对解法二的优化，根据题目的意思字符的种类只有26种，即全是小写字母，所以我们可以优化HashMap的空间，用数组 + HashTable的思想
      * 来替代 HashMap,即将重量级的数据结构换成轻量级的数据结构
      * 大致逻辑是这样的，先根据magazine进行词频统计加，再根据ransomNote进行词频统计减，在减之前判断。
-     * 时间复杂度：
-     * 空间复杂度：
+     * 时间复杂度：O(n)
+     * 空间复杂度：O(1)
      */
     public boolean method03(String ransomNote, String magazine) {
         if (ransomNote.length() > magazine.length()) {
