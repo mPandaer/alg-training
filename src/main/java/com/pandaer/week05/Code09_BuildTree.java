@@ -2,6 +2,8 @@ package com.pandaer.week05;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 //https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 public class Code09_BuildTree {
@@ -17,7 +19,12 @@ public class Code09_BuildTree {
      * 空间复杂度：每次都会复制数组 O(2n) O(n)
      */
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-       return doBuildTree(preorder,0,preorder.length-1,inorder,0,inorder.length-1);
+        //提前构建一个InorderMap
+        HashMap<Integer, Integer> inorderMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderMap.put(inorder[i],i);
+        }
+       return doBuildTree(preorder,0,preorder.length-1,inorder,0,inorder.length-1,inorderMap);
     }
 
 
@@ -31,7 +38,7 @@ public class Code09_BuildTree {
      * @param iend
      * @return
      */
-    private TreeNode doBuildTree(int[] preorder, int pstart, int pend, int[] inorder, int istart, int iend) {
+    private TreeNode doBuildTree(int[] preorder, int pstart, int pend, int[] inorder, int istart, int iend, Map<Integer,Integer> inorderMap) {
         if (pstart > pend || pstart < 0 || pend >= preorder.length) {
             return null;
         }
@@ -43,19 +50,13 @@ public class Code09_BuildTree {
         int rootVal = preorder[pstart];
         TreeNode root = new TreeNode(rootVal);
         //寻找位置
-        int rootIndex = -1;
-        for (int i = istart; i <= iend; i++) {
-            if (rootVal == inorder[i]) {
-                rootIndex = i;
-                break;
-            }
-        }
+        int rootIndex = inorderMap.get(rootVal);
 
         //构建左子树
-        root.left = doBuildTree(preorder,pstart + 1,pstart + (rootIndex - istart),inorder,istart,rootIndex-1);
+        root.left = doBuildTree(preorder,pstart + 1,pstart + (rootIndex - istart),inorder,istart,rootIndex-1,inorderMap);
 
         //构建右子树
-        root.right = doBuildTree(preorder,pstart + (rootIndex - istart) + 1,pend,inorder,rootIndex + 1,iend);
+        root.right = doBuildTree(preorder,pstart + (rootIndex - istart) + 1,pend,inorder,rootIndex + 1,iend,inorderMap);
 
         return root;
 
