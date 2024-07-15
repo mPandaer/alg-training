@@ -17,31 +17,49 @@ public class Code09_BuildTree {
      * 空间复杂度：每次都会复制数组 O(2n) O(n)
      */
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-       if (preorder.length == 0 || inorder.length == 0) {
-           return null;
-       }
-        int rootVal = preorder[0];
+       return doBuildTree(preorder,0,preorder.length-1,inorder,0,inorder.length-1);
+    }
+
+
+    /**
+     * 根据索引的范围构建树
+     * @param preorder
+     * @param pstart
+     * @param pend
+     * @param inorder
+     * @param istart
+     * @param iend
+     * @return
+     */
+    private TreeNode doBuildTree(int[] preorder, int pstart, int pend, int[] inorder, int istart, int iend) {
+        if (pstart > pend || pstart < 0 || pend >= preorder.length) {
+            return null;
+        }
+
+        if (istart > iend || istart < 0 || iend >= inorder.length) {
+            return null;
+        }
+
+        int rootVal = preorder[pstart];
         TreeNode root = new TreeNode(rootVal);
-        int iIndex = -1;
-        for (int i = 0; i < inorder.length; i++) {
+        //寻找位置
+        int rootIndex = -1;
+        for (int i = istart; i <= iend; i++) {
             if (rootVal == inorder[i]) {
-                iIndex = i;
+                rootIndex = i;
                 break;
             }
         }
 
-        //构造左子树
-        int[] leftInorder = Arrays.copyOfRange(inorder, 0, iIndex);
-        int[] leftPreorder = Arrays.copyOfRange(preorder, 1, 1 + leftInorder.length);
-        root.left = buildTree(leftPreorder,leftInorder);
+        //构建左子树
+        root.left = doBuildTree(preorder,pstart + 1,pstart + (rootIndex - istart),inorder,istart,rootIndex-1);
 
-        //构造右子树
-        int[] rightInorder = Arrays.copyOfRange(inorder, iIndex + 1, inorder.length);
-        int[] rightPreorder = Arrays.copyOfRange(preorder, leftPreorder.length + 1, preorder.length);
-        root.right = buildTree(rightPreorder,rightInorder);
+        //构建右子树
+        root.right = doBuildTree(preorder,pstart + (rootIndex - istart) + 1,pend,inorder,rootIndex + 1,iend);
+
         return root;
-    }
 
+    }
 
 
     public static class TreeNode {
